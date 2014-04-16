@@ -25,11 +25,8 @@ import android.widget.Toast;
 
 public class TakeAndSavePicture extends Activity {
 
-	private SurfaceView surfacePreviewPhoto = null;
 	private ImageView imagePreviewPhoto = null;
-	private SurfaceHolder surfacePreviewHolder = null;
 	private Camera photoCamera = null;
-	private boolean inPreview = false;
 	private byte[] photoData = null;
 
 	@SuppressWarnings("deprecation")
@@ -37,9 +34,9 @@ public class TakeAndSavePicture extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_take_and_save_picture);
-		surfacePreviewPhoto = (SurfaceView) findViewById(R.id.surfacePreviewPhoto);
+		SurfaceView surfacePreviewPhoto = (SurfaceView) findViewById(R.id.surfacePreviewPhoto);
 		imagePreviewPhoto = (ImageView) findViewById(R.id.imagePreviewPhoto);
-		surfacePreviewHolder = surfacePreviewPhoto.getHolder();
+		SurfaceHolder surfacePreviewHolder = surfacePreviewPhoto.getHolder();
 		surfacePreviewHolder.addCallback(surfaceCallback);
 		surfacePreviewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
@@ -50,21 +47,15 @@ public class TakeAndSavePicture extends Activity {
 		if (photoCamera == null) {
 			photoCamera = Camera.open();
 		}
-		if (!inPreview) {
-			photoCamera.startPreview();
-			inPreview = true;
-		}
+		photoCamera.startPreview();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (inPreview) {
-			photoCamera.stopPreview();
-		}
+		photoCamera.stopPreview();
 		photoCamera.release();
 		photoCamera = null;
-		inPreview = false;
 	}
 
 	@Override
@@ -75,25 +66,24 @@ public class TakeAndSavePicture extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		if (item.getItemId() == R.id.item_take_photo) {
-			if (inPreview) {
-				photoCamera.takePicture(null, null, photoCallback);
-			}
+			photoCamera.takePicture(null, null, photoCallback);
 		}
 
 		if (item.getItemId() == R.id.item_save_photo) {
 			if (photoData == null) {
-				Toast.makeText(TakeAndSavePicture.this, "Press 'Take Photo' \n then you can save the file",
+				Toast.makeText(TakeAndSavePicture.this,
+						"Press 'Take Photo' \n then you can save the file",
 						Toast.LENGTH_LONG).show();
 				return false;
 			}
-			AlertDialog.Builder inputDialogFileName = new AlertDialog.Builder(this);
+			AlertDialog.Builder inputDialogFileName = new AlertDialog.Builder(
+					this);
 
 			inputDialogFileName.setTitle("Enter the file name");
 			inputDialogFileName.setMessage("The file name:");
-			final EditText input = new EditText(this);
-			inputDialogFileName.setView(input);
+			final EditText inputEditText = new EditText(this);
+			inputDialogFileName.setView(inputEditText);
 			inputDialogFileName.setNegativeButton("Cancel",
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
@@ -105,12 +95,19 @@ public class TakeAndSavePicture extends Activity {
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
-
+							String fileName = inputEditText.getText()
+									.toString();
+							if (fileName.isEmpty()) {
+								Toast.makeText(TakeAndSavePicture.this,
+										"Enter characters", Toast.LENGTH_LONG)
+										.show();
+								return;
+							}
 							File filePhoto = new File(Environment
 									.getExternalStoragePublicDirectory(
 											Environment.DIRECTORY_PICTURES)
 									.getPath()
-									+ "/" + input.getText().toString() + ".jpg");
+									+ "/" + fileName + ".jpg");
 							FileOutputStream outputPhotoFileStream;
 							try {
 								outputPhotoFileStream = new FileOutputStream(
@@ -199,5 +196,4 @@ public class TakeAndSavePicture extends Activity {
 					photoData, 0, photoData.length));
 		}
 	}
-
 }
