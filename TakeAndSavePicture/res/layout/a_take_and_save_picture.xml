@@ -6,17 +6,19 @@
     tools:context="com.assignment2.takeandsavephoto.TakeAndSavePicture"
     tools:ignore="MergeRootFrame" >
 
-   <SurfaceView
+    <SurfaceView
         android:id="@+id/surfacePreviewPhoto"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-   <ImageView
-       android:id="@+id/imagePreviewPhoto"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:scaleType="fitXY"
-       android:src="@drawable/background" />
+    <ImageView
+        android:id="@+id/imagePreviewPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="#000000"        
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/photo"
+        android:src="@drawable/background" />
 
 </FrameLayout>
-
