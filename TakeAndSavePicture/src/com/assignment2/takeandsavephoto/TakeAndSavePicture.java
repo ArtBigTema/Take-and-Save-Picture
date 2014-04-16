@@ -25,7 +25,9 @@ import android.widget.Toast;
 
 public class TakeAndSavePicture extends Activity {
 
+	private SurfaceView surfacePreviewPhoto = null;
 	private ImageView imagePreviewPhoto = null;
+	private SurfaceHolder surfacePreviewHolder = null;
 	private Camera photoCamera = null;
 	private byte[] photoData = null;
 
@@ -34,9 +36,9 @@ public class TakeAndSavePicture extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_take_and_save_picture);
-		SurfaceView surfacePreviewPhoto = (SurfaceView) findViewById(R.id.surfacePreviewPhoto);
+		surfacePreviewPhoto = (SurfaceView) findViewById(R.id.surfacePreviewPhoto);
 		imagePreviewPhoto = (ImageView) findViewById(R.id.imagePreviewPhoto);
-		SurfaceHolder surfacePreviewHolder = surfacePreviewPhoto.getHolder();
+		surfacePreviewHolder = surfacePreviewPhoto.getHolder();
 		surfacePreviewHolder.addCallback(surfaceCallback);
 		surfacePreviewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
@@ -131,6 +133,45 @@ public class TakeAndSavePicture extends Activity {
 			// wait until surfaceChanged()
 		}
 
+	/*	private Camera.Size getBestPreviewSize(int width, int height,
+				Camera.Parameters parameters) {
+			Camera.Size result = null;
+			for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+				if (size.width <= width && size.height <= height) {
+					if (result == null) {
+						result = size;
+					} else {
+						int resultArea = result.width * result.height;
+						int newArea = size.width * size.height;
+						if (newArea > resultArea) {
+							result = size;
+						}
+					}
+				}
+			}
+			return (result);
+		}
+
+		private void initPreview(int width, int height) {
+			if (photoCamera != null
+					&& surfacePreviewHolder.getSurface() != null) {
+				try {
+					photoCamera.setPreviewDisplay(surfacePreviewHolder);
+				} catch (Throwable t) {
+					Toast.makeText(TakeAndSavePicture.this, t.getMessage(),
+							Toast.LENGTH_LONG).show();
+				}
+				Camera.Parameters parameters = photoCamera.getParameters();
+				Camera.Size size = getBestPreviewSize(width, height, parameters);
+				if (size != null) {
+					parameters.setPreviewSize(size.width, size.height);
+					parameters.setPictureFormat(ImageFormat.JPEG);
+					photoCamera.setParameters(parameters);
+				}
+			}
+
+		}*/
+
 		void setCameraDisplayOrientation() {
 			// get degree of Rotation
 			int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -196,4 +237,5 @@ public class TakeAndSavePicture extends Activity {
 					photoData, 0, photoData.length));
 		}
 	}
+
 }
